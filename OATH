@@ -1,0 +1,7 @@
+facebook auth provides token(allows limited permissions) then goes to facebook resource server
+
+token expires user must sign in again 
+
+
+need to register expo app with auth server
+

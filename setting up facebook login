@@ -1,0 +1,27 @@
+get facebook developer account
+
+go to https://developers.facebook.com/apps
+
+click register now butoon 
+
+continue setup 
+
+then clikc set up button 
+
+Since the expo client supports both android and IOs will perform the setup for both platforms.
+
+Don't worry you don't have to do anything to configure it Android environment.
+
+Use host.exp.Exponent as your bundle.iD and allow for single sign on. You can just skip all other options.
+
+click on my apps 
+
+copy and paste your App ID 
+
+cam create test users
+
+
+Lecture notes
+
+
+

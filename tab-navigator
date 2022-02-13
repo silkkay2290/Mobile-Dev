@@ -1,0 +1,70 @@
+app.js
+
+const RootStack = createBottomTabNavigator()
+
+<NavigationContainer>
+            <RootStack.Navigator initialRouteName="Home">
+                <RootStack.Screen name"Home" component={HomeScreen}/>
+                <RootStack.Screen name"Details" component={DetailsScreen}/>
+            </RootStack.Navigator>
+</NavigationContainer>
+
+can also do tabs like 
+older version : 
+
+const rootStack = createBottomTabNavigator({
+    Home: HomeScreen
+    Player: PlayerScreen
+}, {
+    initialRouteName: 'Home'
+    }
+)
+
+const AppContainer = createAppContainer(rootStack)
+
+export default class App extends React.Component{
+    render() {
+        return (
+            </AppContainer>
+        )
+    }
+}
+
+Tabnaviagtor does not support pushing multiple screens
+
+
+destructor syntax js
+
+var object ={ one: 1, two: 2, three: 3}
+
+let {two} = object 
+ 
+console.log(two) //prints 2
+
+...prints rest of array
+
+
+custiomization of tabs
+import {Ionicons} from '@expo/vector-icons'
+
+<RootStack.Navigator
+        screenOptions={({route})=>({ //route tells us what screen we are on 
+            tabBarIcon: ({focused, color, size})=>{
+                let iconName
+                if(route.name === 'Home'){
+                    iconName = focused ? 'ios-information-circle' 'ios-information-outline'
+                } else if (route.name === 'Details') {
+                    iconName = 'ios-list-box'
+                }
+                return <<Ionicons name={iconName} size={size} color={color}/>
+            }
+        })}
+    tabBarOptions ={{
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'grey'
+    }}
+
+ initialRouteName="Home">
+
+
+</RootStack.Navigator>

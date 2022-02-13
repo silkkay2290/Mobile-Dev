@@ -1,0 +1,23 @@
+index.html -> app.js(entry point)
+
+life cycles
+
+    contructor() -> componentWillMount(called immentiely before the added to the DOM)
+    ->render(to get elements to add to the DOM)
+    ->componentDidMount
+    ->render
+
+    shouldComponenetUpdate
+        prevents unncecessary re-rendering of a component by returning false if a render is not required 
+    componentWillUnmount
+        called immediately before the component is tore down or 'unmounted'
+
+Props: 
+    cant be modified with render the component 
+
+State:
+    used for data is going to change
+    
+    usually initalized in the constructor 
+
+    when state is changed a rerender is triggered

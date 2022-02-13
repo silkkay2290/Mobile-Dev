@@ -1,0 +1,37 @@
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Animated } from 'react-native';
+
+export default function App() {
+  const [circleOpacity, setCircleOpacity] = useState(new Animated.Value(0))
+  
+  useEffect(()=>{
+      Animated.timing(
+        circleOpacity, {
+          toValue: 1,
+          duration: 10000
+        }
+      ).start()
+  }, [circleOpacity])
+
+  return (
+    <View style={styles.container}>
+      <Animated.View style={{...styles.circle, opacity: circleOpacity}} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  circle:{
+    width: 44, 
+    height: 44, 
+    borderRadius: 44/2,  //to create circle set the width and height to the same thing and 
+    //borderRadius to the width/2
+    backgroundColor: "red"
+  }
+});

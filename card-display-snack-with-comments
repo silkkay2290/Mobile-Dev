@@ -1,0 +1,65 @@
+CardDeck.js
+import React  from 'react';
+import {
+  View,
+  Animated
+} from 'react-native';
+
+export default function CardDeck({data , renderCard}){
+    function renderCards(){
+        return data.map(item =>{ //very item in data array, it will give us back this item
+            return renderCard(item)
+        })
+    }
+
+    return(
+        <View>
+            {renderCards()}
+        </View>
+    )
+
+
+} 
+
+App.js
+import React from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { Card } from 'react-native-paper'; //all the styling for a card
+import CardDeck from './components/CardDeck'
+
+
+const DATA = [ //test data 
+  {
+    id: 3,
+    title: 'Boat',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/boat.png',
+  },
+  {
+    id: 2,
+    title: 'girl',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/girl.png',
+  },
+   {
+    id: 1,
+    title: 'Pool',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/pool.png',
+  }
+];
+
+export default function App() {
+  function renderCard(item){
+    return(
+      <Card key={item.id}>
+        <Image source={{ uri: item.uri }} style={{ width: 400, height: 400 }} />
+        <Text> {item.title} </Text>
+    </Card>
+    )
+  }
+
+  return (
+    <CardDeck data={DATA} renderCard={renderCard}/> //pass test data to carddeck
+    //renderCard will take some idem
+  );
+}
+
+

@@ -1,0 +1,73 @@
+import React from 'react';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import * as firebase from 'firebase'
+
+var firebaseConfig = {
+  apiKey: "AIzaSyAsecUP8MbsHO2zE7WnD3AKpvmfgd2m580",
+  authDomain: "nomoreconfusion-89e49.firebaseapp.com",
+  databaseURL: "https://nomoreconfusion-89e49.firebaseio.com",
+  projectId: "nomoreconfusion-89e49",
+  storageBucket: "nomoreconfusion-89e49.appspot.com",
+  messagingSenderId: "294565008516",
+  appId: "1:294565008516:web:bef59d78fe1d8bf6295ed1"
+};
+// Initialize Firebase
+if(firebase.apps.length == 0){ //checks number of apps intitalize(to prevent error)
+    //if apps initalized then wont do anything, if not then it will initalialize
+  firebase.initializeApp(firebaseConfig);
+}
+
+export default function App() {
+  const [highscore, setScore] = React.useState(0) //creates tate for highscore
+
+  React.useEffect(()=>{
+    setupHighScoreListener("TestingUser1") //needs the userID
+  },[]) //will once do this once(for the component mount), []
+
+  function storeHighScore(userID, score){  
+    //Write this score to the database
+    firebase.database().ref('users/'+userID).set( //database() is database section, .ref refereneces collection(users)for user data
+    //.ref('users/'+userID) creates a new folder based on userID(doesnt exist then creates it)
+      {
+          //set will set the score, that we passed in 
+        highscore: score
+      }
+    )
+  }
+  
+  function setupHighScoreListener(userID){// read from firebase
+    firebase.database().ref('users/'+userID).on('value', (snapshot)=>{ // have to reference users and userID since the score is under that collection 
+        //.on-> on change lister whenever change happens it will push it firebase
+        //when change happens then fire arrow function then it will pass in the snapshot
+        const highScore = snapshot.val().highscore
+        //.val() is the value of everything that changed and highscore property of the object
+        setScore(highScore) // will set the score for the state
+     }
+    )
+
+  }
+
+
+  return (
+    <View style={styles.container}>
+        <Text style={{fontSize: 40}}> highscore: {highscore}</Text>
+
+      <Button title="Add User" onPress={()=>{
+        storeHighScore("TestingUser1", 767) //button will fire arrow function and use storeHighScore to set the userID(1st paramter passed) and the score
+      }}></Button>
+    </View>
+  );
+
+
+}
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

@@ -1,0 +1,39 @@
+Step 1. Setup the expo
+
+expo init machineLearningApp
+
+Step 2. Install Expo-GL support GPU Accelerated backend support.
+
+npm install expo-gl
+
+Step 3: Install @tensorflow/tfs
+
+npm install @tensorflow/tfjs
+
+Step 4: Install @tensorflow/tfjs-react-native
+
+npm install @tensorflow/tfjs-react-native
+
+Step 5: Install the MobileNet Model. The mobilenet model was train to classify images into a 1000 categories. These categories ranges from Tiger sharks to street signs. You can find a complete list of classes here: https://github.com/tensorflow/tfjs-examples/blob/master/mobilenet/imagenet_classes.js
+
+npm install @tensorflow-models/mobilenet
+
+
+
+Step 6: Install other peerDependencies. The expo camera functionally is required by mobilenet.
+
+npm install @react-native-community/async-storage
+
+npm install react-native-fs
+
+npm install expo-camera
+
+
+
+
+
+
+
+For additional details refer to
+
+https://www.npmjs.com/package/@tensorflow/tfjs-react-native

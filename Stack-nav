@@ -1,0 +1,125 @@
+npm install --save react-navigation
+npm install install @react-navigation/native
+
+since using expo 
+
+expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view
+
+list of depenpeices on dcoumatation 
+screens
+    JSX component that gets rendered 
+
+Routes 
+    Name JSX Component screeen pairs 
+
+App.js
+
+import react, {Component} from 'react'
+import { StyleSheet, Text, View } from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack'
+
+const RootStack = createStackNavigator()
+
+export default class App extends Component{
+    render() {
+        return (
+            <NavigationContainer>
+            <RootStack.Navigator initialRouteName="Home">
+                <RootStack.Screen name"Home" component={HomeScreen}/>
+                <RootStack.Screen name"Details" component={DetailsScreen}/>
+            </RootStack.Navigator>
+            </NavigationContainer>
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "white",
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+})
+
+detailsScreen.js
+
+import react, {Component} from 'react'
+import { StyleSheet, Text, View } from 'react-native';
+
+
+
+export default class detailsScreen extends Component{
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={{color: "white", fontSize: 30}}>  Details screen</Text>
+            </View>
+            <TouchableOpacity onPress{() => this.props.navigation.navigate('Home')}>
+            <View style={backgroundColor: "red"}>
+            <Text style={{color: "blue", fontSize: 30}}> Go home</Text>
+            </View>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity onPress{() => this.props.navigation.push('Details')}>  //can create copy of details screen
+            <View style={backgroundColor: "green"}>
+            <Text style={{color: "blue", fontSize: 30}}> Go home</Text>
+            </View>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity onPress={()=>this.props.navigation.goBack()}> //will go back to on the stack
+            <View style={{backgroundColor: "yellow"}}>
+                <Text style={{color: "blue", fontSize: 30}}> Go back</Text>
+            </View>
+            </TouchableOpacity>
+            </View>
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "blue",
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+})
+
+HomeScreen.js
+
+
+import react, {Component} from 'react'
+import { StyleSheet, Text, View } from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack'
+
+
+
+export default class HomeScreen extends Component{
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={{color: "white", fontSize: 30}}> Homescreen</Text>
+            </View>
+            <TouchableOpacity
+                onPress = {() =>this.props.navigation.navigate('Details')}
+            >
+            <View style={backgroundColor: "red"}>
+            <Text style={{color: "blue", fontSize: 30}}> Press Me</Text>
+            </View>
+            </TouchableOpacity>
+            </View>
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "white",
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+})

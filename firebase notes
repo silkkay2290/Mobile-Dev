@@ -1,0 +1,17 @@
+create project
+
+for react native 
+
+pick web, name app, get firebase SDK
+
+use sdk for configuration 
+
+sdk under project setting and copy sdk(if not already in porject)
+
+npm install firebase
+
+
+
+
+
+

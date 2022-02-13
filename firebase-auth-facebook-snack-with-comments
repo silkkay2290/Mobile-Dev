@@ -1,0 +1,149 @@
+import * as React from 'react';
+import { Text, View, StyleSheet, Button, Alert } from 'react-native';
+import * as Facebook from 'expo-facebook';
+import { NavigationContainer } from '@react-navigation/native';
+import LoadingScreen from './Components/LoadingScreen';
+import HomeScreen from './Components/HomeScreen';
+import * as SecureStore from 'expo-secure-store';
+import * as firebaseApp from 'firebase';
+/**
+ * auth from firebase gives app a token
+ * app with reach out to the OATH(facebook or google), OAth will return a token to the app then 
+ * that token will be sent to the firebase auth the generate a token(credinital) and sent it to the app 
+ * 
+ * 
+ * have to create auth provider in firebase use appID, appSecert
+ * appSecert from facebook under basic, then firebase auth should say enabled
+ * 
+ * secure database, go to realtime databases, modify rules
+ * 
+ * read: auth != null  //if not null user can read 
+ * write: false
+ */
+var firebaseConfig = {
+  apiKey: 'AIzaSyAsecUP8MbsHO2zE7WnD3AKpvmfgd2m580',
+  authDomain: 'nomoreconfusion-89e49.firebaseapp.com',
+  databaseURL: 'https://nomoreconfusion-89e49.firebaseio.com',
+  projectId: 'nomoreconfusion-89e49',
+  storageBucket: 'nomoreconfusion-89e49.appspot.com',
+  messagingSenderId: '294565008516',
+  appId: '1:294565008516:web:bef59d78fe1d8bf6295ed1',
+};
+// Initialize Firebase
+if (firebaseApp.apps.length == 0) {
+  firebaseApp.initializeApp(firebaseConfig);
+}
+
+export default class App extends React.Component {
+  constructor() {
+    super();
+    this.state = { loading: true, token: null };
+  }
+
+  componentWillMount() {
+    setTimeout(() => {
+      this.checkForToken();
+    }, 2000);
+    this.checkForFirebaseCredential();
+    // Listen for authentication state to change.
+    firebaseApp.auth().onAuthStateChanged(user => {
+      if (user != null) {
+        console.log('We are authenticated now!');
+        Alert.alert('We authneticated with Fireabse!', `Hi ${user}`);
+      }
+    });
+  }
+
+  //Check Async Storage if token is available
+  //If it is available set loading state to false
+  async checkForToken() {
+    let token = await SecureStore.getItemAsync('token');
+    this.setState({
+      token: token,
+      loading: false,
+    });
+  }
+
+  async checkForFirebaseCredential() {
+    let credential = await SecureStore.getItemAsync('firebaseCredential');
+    if (credential) {
+      firebaseApp
+        .auth()
+        .signInWithCredential(credential)
+        .catch(error => {
+          console.log('Auth failed and here the error' + JSON.stringify(error));
+        });
+    }
+  }
+
+  //Write token to secure storage and firebase credital.
+  async saveTokenToSecureStorage(token, credential) {
+    SecureStore.setItemAsync('token', token);
+    //Save Firebase credential
+    SecureStore.setItemAsync('firebaseCredential', credential);
+    this.setState({
+      token: token,
+    });
+  }
+
+  render() {
+    if (this.state.loading === true) {
+      return <LoadingScreen />;
+    } else if (this.state.token === null) {
+      return (
+        <View style={styles.container}>
+          <Button title="LogIn With Facebook" onPress={() => this.logIn()} />
+        </View>
+      );
+    } else {
+      return <HomeScreen />;
+    }
+  }
+
+  async logIn() {
+    try {
+      //Seed documentation on course site at mobileappdev.teachable.com
+      //For default user names and passwords.
+      await Facebook.initializeAsync('184462529575747');
+      const {
+        type,
+        token,
+        expires,
+        permissions,
+        declinedPermissions,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile'],
+      });
+      if (type === 'success') {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}`
+        );
+        let credential = firebaseApp.auth.FacebookAuthProvider.credential(
+          token
+        );
+        firebaseApp
+          .auth()
+          .signInWithCredential(credential) //credential is the token from firebase 
+          .catch(error => {
+            console.log(
+              'Auth failed and here is the error ' + JSON.stringify(error)
+            );
+          });
+        this.saveTokenToSecureStorage(token, credential);
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

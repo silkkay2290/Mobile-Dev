@@ -1,0 +1,176 @@
+//CardDeck.js
+
+import React, { Component } from 'react';
+import {
+  View,
+  Animated,
+  PanResponder,
+  Easing
+} from 'react-native';
+var DIRECTION ={
+    left: 'left',
+    right: 'right',
+    center: 'center'
+}
+
+export default class CardDeck extends Component {
+
+constructor(props){
+      super(props)
+      const position = new Animated.ValueXY()
+      const panResponder = PanResponder.create({
+          onStartShouldSetPanResponder: () => true, 
+          onPanResponderMove: (event, gestureState) => {
+            position.setValue({x: gestureState.dx, y:gestureState.dy})
+            console.log(gestureState)
+          }, 
+          onPanResponderRelease: (event, gestureState) => {
+            let threshold = 100
+            if(gestureState.dx > threshold ){
+                this.animateAway(position ,DIRECTION.right)
+            }
+            else if (gestureState.dx <-threshold){
+                this.animateAway(position, DIRECTION.left)
+            }else{
+               this.animateAway(position, DIRECTION.center)
+            }
+          }
+      })
+
+      this.state = { panResponder, position }
+
+  }
+
+  animateAway(position, direction){
+    if (direction === DIRECTION.left){
+      Animated.timing(position, {
+            toValue: {
+              x: -400,
+              y: 0,
+            },
+            easing: Easing.linear,
+            duration: 500,
+          }).start(()=>{
+            //remove card from state here. 
+            console.log("remove card")
+      });
+    }
+    else if(direction === DIRECTION.right){
+        Animated.timing(position, {
+                    toValue: {
+                      x: 400,
+                      y: 0,
+                    },
+                    easing: Easing.linear,
+                    duration: 500,
+                  }).start();
+    }else{
+      //Assume center 
+        Animated.timing(position, {
+        toValue: {
+          x: 0,
+          y: 0,
+        },
+        easing: Easing.linear,
+        duration: 300,
+      }).start();
+    }
+  }
+
+
+  getUpdatedStyle(){
+    let {position} = this.state
+    let _rotate = position.x.interpolate({
+      inputRange: [-500, 0, 500],
+      outputRange: ['-120deg', '0deg','120deg']
+    })
+    return {
+      ...this.state.position.getLayout(),
+      transform: [{rotate: _rotate}]
+    }
+  }
+
+
+    renderCards(){
+      return this.props.data.map( (item, index) =>{
+        if(index === 0){
+          return(
+          <Animated.View
+                style={this.getUpdatedStyle()}
+                {...this.state.panResponder.panHandlers}
+                >
+                  {this.props.renderCard(item)}
+          </Animated.View>
+                )
+              }
+              return this.props.renderCard(item)
+         })
+    }
+    
+
+    
+    render(){
+      return(
+        <View>
+          {this.renderCards()}
+        </View> 
+        )
+    }
+}
+
+//App.js
+
+import * as React from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  PanResponder,
+  Animated,
+  Image,
+} from 'react-native';
+import { Constants } from 'expo';
+import { Card } from 'react-native-paper';
+
+// You can import from local files
+import CardDeck from './components/CardDeck';
+
+const DATA = [
+  {
+    id: 2,
+    title: 'Boat',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/boat.png',
+  },
+  {
+    id: 3,
+    title: 'Girl',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/girl.png',
+  },
+  {
+    id: 1,
+    title: 'Pool',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/pool.png',
+  },
+];
+
+export default class App extends React.Component {
+
+  renderCard(item) {
+    return (
+      <Card key={item.id}>
+        <Image source={{ uri: item.uri }} style={{ width: 400, height: 400 }} />
+        <Text> {item.title} </Text>
+      </Card>
+    );
+  }
+
+  render() {
+    return (
+      <View>
+        <CardDeck data={DATA} renderCard={this.renderCard} />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({});

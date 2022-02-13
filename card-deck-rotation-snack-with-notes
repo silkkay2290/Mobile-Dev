@@ -1,0 +1,101 @@
+
+//CardDeck.js
+
+import React, { useState }  from 'react';
+import {
+  View,
+  Animated,
+  PanResponder
+} from 'react-native';
+
+
+
+
+export default function CardDeck({data , renderCard}){
+    const [positionXY, setPostionXY] = useState(new Animated.ValueXY()) //state for postion for animated view, if leave default then it will be top left
+
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: ()=> true,  //panresponer shoud start when anything is touched, can add additional conditions
+        onPanResponderMove: (event, gestureState)=>{ //gestureState contains all the info regarding the gestureState
+            positionXY.setValue({x:gestureState.dx, y: gestureState.dy }) //detect changes on the div and will set the value to the changed value
+            console.log(gestureState)
+        },
+        onPanResponderRelease: ()=>{ //need to know when the card is released
+            console.log("release")
+        }
+    })
+    
+    function renderCards(){
+        return data.map((item,index) =>{
+            if( index == 0){ //only want top card to move
+                //each card needs zIndex
+            return (
+                //want cards to move so Animated.View and we need to get the positon 
+            <Animated.View style={{zIndex: -index, ...positionXY.getLayout()}} {...panResponder.panHandlers} >
+                {renderCard(item)}
+            </Animated.View>)
+            }else{
+                return(<View style={{zIndex: -index}}>  
+                    {renderCard(item)}
+                </View>)
+            }
+            
+        })
+    }
+
+    return(
+            renderCards()
+    )
+
+
+} 
+
+//App.js
+
+import React from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { Card } from 'react-native-paper';
+import CardDeck from './components/CardDeck'
+
+
+const DATA = [
+  {
+    id: 3,
+    title: 'Boat',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/boat.png',
+  },
+  {
+    id: 2,
+    title: 'girl',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/girl.png',
+  },
+   {
+    id: 1,
+    title: 'Pool',
+    uri: 'https://homepages.cae.wisc.edu/~ece533/images/pool.png',
+  }
+];
+
+export default function App() {
+  function renderCard(item){
+    return(
+      <Card key={item.id} style={{position:'absolute'}}>
+        <Image source={{ uri: item.uri }} style={{ width: 400, height: 400 }} />
+        <Text> {item.title} </Text>
+    </Card>
+    )
+  }
+
+  return (
+    <CardDeck data={DATA} renderCard={renderCard}/>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

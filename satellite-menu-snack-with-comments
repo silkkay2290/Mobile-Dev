@@ -1,0 +1,88 @@
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Animated, Dimensions, Easing, TouchableOpacity } from 'react-native';
+
+const screenWidth = Math.round(Dimensions.get('window').width)
+const screenHeight = Math.round(Dimensions.get('window').height)
+
+export default function App() {
+  const [positionValueBlue, setPostionValueBlue] = useState(new Animated.ValueXY({x:screenWidth/2-22, y:screenHeight/2}))
+  const [positionValueRed, setPostionValueRed] = useState(new Animated.ValueXY({x:screenWidth/2-22, y:screenHeight/2})) //create different position value for each ball 
+  const [positionValueGreen, setPostionValuGreen] = useState(new Animated.ValueXY({x:screenWidth/2-22, y:screenHeight/2}))
+  const [positionValueYellow, setPostionValueYellow] = useState(new Animated.ValueXY({x:screenWidth/2-22, y:screenHeight/2}))
+  const [radius, setRadius] = useState(150)
+  const angles = [0 , 1, 2] //in radians, 3 based we have 3 balls
+
+  //Formula for x & y 
+  //x: radius * Math.cos(angles_2) + startX,
+  //y: radius * Math.sin(angles_2) + startY,
+  
+  function moveBall(){
+    Animated.timing(
+      positionValueBlue,  //for blue ball
+      {
+        toValue: {
+          x: radius * Math.cos(angles[0]) + screenWidth/2-22,
+          y: radius * Math.sin(angles[0]) + screenHeight/2, //creates new x and y based on previous x and y values
+        },
+        easing: Easing.bounce,
+        duration: 2000
+      }
+    ).start()
+    Animated.timing(
+      positionValueGreen, //for green ball
+      {
+        toValue: {
+          x: radius * Math.cos(angles[1]) + screenWidth/2-22,
+          y: radius * Math.sin(angles[1]) + screenHeight/2,
+        },
+        easing: Easing.bounce,
+        duration: 2000
+      }
+    ).start()
+    Animated.timing(
+      positionValueYellow, //for yellow ball
+      {
+        toValue: {
+          x: radius * Math.cos(angles[2]) + screenWidth/2-22,
+          y: radius * Math.sin(angles[2]) + screenHeight/2,
+        },
+        easing: Easing.bounce,
+        duration: 2000
+      }
+    ).start()
+  }
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity style={{zIndex:1}} onPress={()=>{ //zIndex will put the red circle on top
+         moveBall()
+        if (radius == 150){
+          setRadius(0) //if red is clicked and all balls are at the radius 150 and red is clicked then balls will return to red ball position
+        }else{
+          setRadius(150)
+        }
+        }}>
+      <Animated.View style={{...styles.circle, ...positionValueRed.getLayout()}} />
+      </TouchableOpacity>
+      <Animated.View style={{...styles.circle, backgroundColor:'blue', position:'absolute', ...positionValueBlue.getLayout()}} /> //absoule will overlap
+      <Animated.View style={{...styles.circle, backgroundColor: 'green', position:'absolute', ...positionValueGreen.getLayout()}} />
+      <Animated.View style={{...styles.circle, backgroundColor: 'yellow', position:'absolute', ...positionValueYellow.getLayout()}} />
+
+   
+
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  circle:{
+    width: 44, 
+    height: 44, 
+    borderRadius: 44/2, 
+    backgroundColor: "red"
+  }
+});

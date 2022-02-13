@@ -1,0 +1,126 @@
+
+//app.js
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from 'react-native';
+
+import Icon from 'react-native-vector-icons/Feather';
+import TodoList from './components/TodoList';
+
+export default function App() {
+  const [value, setValue] = useState('');
+  const [todos, setTodos] = useState([]);
+
+  let addTodo = () => {
+    if (value.length > 0) {
+      setTodos([...todos, { text: value, key: Date.now(), checked: false }]);
+      setValue('');
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Todo List</Text>
+      <View style={styles.textInputContainer}>
+        <TextInput
+          style={styles.textInput}
+          multiline={true}
+          placeholder="What do you want to do today?"
+          placeholderTextColor="#abbabb"
+          value={value}
+          onChangeText={(value) => setValue(value)}
+        />
+        <TouchableOpacity onPress={() => addTodo()}>
+          <Icon name="plus" size={30} color="blue" style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
+      </View>
+      <ScrollView>
+        {todos.map((item) => (
+          <TodoList text={item.text} key={item.key} />
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  header: {
+    marginTop: '15%',
+    fontSize: 20,
+    color: 'red',
+    paddingBottom: 10,
+  },
+  textInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    borderColor: 'black',
+    borderBottomWidth: 1,
+    paddingRight: 10,
+    paddingBottom: 10,
+  },
+  textInput: {
+    flex: 1,
+    height: 20,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+    paddingLeft: 10,
+    minHeight: '3%',
+  },
+});
+
+//TodoList.js
+
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+
+export default function TodoList(props) {
+	return (
+		<View style={styles.listContainer}>
+			<Icon name="square" size={30} color="black" style={{ marginLeft: 15 }} />
+			<Text style={styles.listItem}>{props.text}</Text>
+			<Icon
+				name="trash-2"
+				size={30}
+				color="red"
+				style={{ marginLeft: 'auto' }}
+				onPress={props.deleteTodo}
+			/>
+		</View>
+	);
+}
+
+const styles = StyleSheet.create({
+	listContainer: {
+		marginTop: '5%',
+		flexDirection: 'row',
+		borderColor: '#aaaaaa',
+		borderBottomWidth: 1.5,
+		width: '100%',
+		alignItems: 'stretch',
+		minHeight: 40
+	},
+	listItem: {
+		paddingBottom: 20,
+		paddingLeft: 10,
+		marginTop: 6,
+		borderColor: 'green',
+		borderBottomWidth: 1,
+		fontSize: 17,
+		fontWeight: 'bold',
+		color: 'black'
+	}
+});

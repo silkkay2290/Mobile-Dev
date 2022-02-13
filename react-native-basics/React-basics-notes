@@ -1,0 +1,90 @@
+Hello world 
+
+HTML 
+<div id="root">
+</div>
+ <!-- self-closing, <div/> if you dont want closing tags -->
+
+React
+ReactDOM.render(
+<h1> Hello, World!</h1>, 
+document.getElementById('root'))
+
+JSX expression Embedding code
+
+React
+
+buildWahoo = (grit, grace, name) => {
+    let wahoo = {
+    grit: 0,
+    grace: 0,
+    name: "Annoymous",
+    readable: function(){
+        return this.grit + " " + this.grace + " "+ this.name
+    }
+  
+   }
+    wahoo.grace = grace
+    wahoo.grit = grit
+    wahoo.name = name
+    return wahoo
+  
+  }
+  
+  const element = (
+    <h1>
+      Hello, {buildWahoo(0.86, 0.9, "DeShea").readable()}!
+    </h1>
+  )
+  
+  ReactDOM.render(
+    element,
+    document.getElementById('root')
+  )
+
+
+HTML
+
+<div id="root"/>
+
+JSX can treated Like Variables
+
+React
+function buildWahoo(grit, grace, name){
+	let wahoo = {
+  grit : 0, 
+  grace : 0, 
+  name: "Annoymous", 
+  pictureUrl: "http://www.w3schools.com/html/img_girl.jpg", 
+  readable: function(){
+  		return this.grit + " " + this.grace + " " + this.name
+  	}
+  }
+  
+  wahoo.grace = grace
+  wahoo.grit = grit
+  wahoo.name = name
+  return wahoo
+}
+
+
+function getGreeting(grit, grace, name){
+  let wahoo = buildWahoo(grit, grace, name)
+	if(name === ""){
+  	return  <img src= {wahoo.pictureUrl}/>
+  }else{
+  	return ( <h1> 
+      Hello, {wahoo.readable()}
+      </h1>)
+  }
+}
+
+const element = getGreeting(0.5, 0.6, "Test")
+
+
+ReactDOM.render(
+element, 
+document.getElementById('root'))
+
+HTML
+div id="root" />
